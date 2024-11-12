@@ -19,7 +19,6 @@ const transformCoordinates = (coordinates : number[]) => {
 };
 
 function App() {
-  const [mapLoaded, setMapLoaded] = useState(false);
 
   const mapRef = useRef<mapboxgl.Map | undefined>(undefined);  // Explicitly set the type
   const mapContainerRef = useRef(null);
@@ -109,7 +108,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!mapLoaded) {
+    if (!mapRef.current) {
       mapboxgl.accessToken = 'pk.eyJ1IjoiYWx5eW91c3NlZiIsImEiOiJjbTNkaWJxNzMwM3poMm1xeTQ1cmFlZTVqIn0.vPHATw-9Rs7j3y-iW7oPJA';
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
@@ -118,29 +117,41 @@ function App() {
       });
   
       mapRef.current.on('load', () => {
-        mapRef.current.addSource('parking', {
-          type: 'geojson',
-          data: geoData,
-        });
+        // Check if the source already exists
+        if (!mapRef.current.getSource('parking')) {
+          mapRef.current.addSource('parking', {
+            type: 'geojson',
+            data: geoData,
+          });
   
-        mapRef.current.addLayer({
-          id: 'parking-layer',
-          type: 'fill',
-          source: 'parking',
-          paint: {
-            'fill-color': [
-              'case',
-              ['==', ['get', 'status'], 'occupied'], '#FF0000',
-              '#32a852',
-            ],
-          },
-        });
-  
-        setMapLoaded(true);
+          // Add the layer if it doesn't already exist
+          mapRef.current.addLayer({
+            id: 'parking-layer',
+            type: 'fill',
+            source: 'parking',
+            paint: {
+              'fill-color': [
+                'case',
+                ['==', ['get', 'status'], 'occupied'], '#FF0000',
+                '#32a852',
+              ],
+            },
+          });
+        } else {
+          // If source exists, update the data
+          const source = mapRef.current.getSource('parking') as mapboxgl.GeoJSONSource;
+          source.setData(geoData);
+        }
       });
+    } else {
+      // If mapRef is already initialized, update the source data
+      const source = mapRef.current.getSource('parking') as mapboxgl.GeoJSONSource;
+      if (source) {
+        source.setData(geoData);
+      }
     }
-  }, [mapLoaded, geoData]);
-  
+  }, [geoData]); // Only run this effect when geoData changes
+    
   useEffect(() => {
     if (mapRef.current && mapRef.current.isStyleLoaded()) {
       const source = mapRef.current.getSource('parking') as mapboxgl.GeoJSONSource;
