@@ -35,3 +35,22 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+#spot-counter {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+#spot-counter div {
+  margin-bottom: 5px;
+}
+
+#spot-counter strong {
+  font-weight: bold;
+}

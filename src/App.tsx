@@ -25,6 +25,9 @@ function App() {
     features: [],
   });
 
+  const [freeSpots, setFreeSpots] = useState(0);
+  const [takenSpots, setTakenSpots] = useState(0);
+
   // Fetch data on component mount
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -45,6 +48,13 @@ function App() {
           status: item.status,
         },
       }));
+
+      // Calculate free and taken spots
+      const taken = data.filter(item => item.status === 'occupied').length;
+      const free = data.filter(item => item.status === 'free').length;
+      
+      setFreeSpots(free);
+      setTakenSpots(taken);
 
       setGeoData({
         type: 'FeatureCollection',
@@ -86,6 +96,7 @@ function App() {
             };
           }
         });
+
       })
       .subscribe();
 
@@ -132,9 +143,25 @@ function App() {
         source.setData(geoData); // Update the data if mapRef exists
       }
     }
+      // Recalculate free and taken spots after data change
+      const taken = geoData.features.filter(feature => feature.properties.status === 'occupied').length;
+      const free = geoData.features.filter(feature => feature.properties.status === 'open').length;
+      setFreeSpots(free);
+      setTakenSpots(taken);
+    
   }, [geoData]); // Only run this effect when geoData is updated
 
-  return <div id="map-container" ref={mapContainerRef} />;
+  return (
+    <>
+      <div id="map-container" ref={mapContainerRef} />
+      
+      {/* Fixed window for parking spot counts */}
+      <div id="spot-counter">
+        <div><strong>Free Spots:</strong> {freeSpots}</div>
+        <div><strong>Taken Spots:</strong> {takenSpots}</div>
+      </div>
+    </>
+  );
 }
 
 export default App;
