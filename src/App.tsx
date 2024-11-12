@@ -145,7 +145,7 @@ function App() {
     }
   }, [geoData]);
 
-  console.log(geoData.features[0].geometry)
+  console.log(geoData.features[0])
   
 
   return (
