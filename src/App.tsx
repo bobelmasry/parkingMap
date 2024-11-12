@@ -136,7 +136,7 @@ function App() {
     return () => {
       mapRef.current.remove();
     };
-  }, [geoData]);
+  }, []);
 
   useEffect(() => {
     if (mapRef.current && mapRef.current.isStyleLoaded()) {
