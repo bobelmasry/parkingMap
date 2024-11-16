@@ -5,8 +5,8 @@ import './App.css';
 import { createClient } from '@supabase/supabase-js';
 import { FeatureCollection, Geometry, Polygon, Feature } from 'geojson'; // Import FeatureCollection type
 
-const supabaseUrl = 'https://nfexunixjcylaxsuasuc.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mZXh1bml4amN5bGF4c3Vhc3VjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzEzNjcwNTAsImV4cCI6MjA0Njk0MzA1MH0.-ESP-AVbSh9JnH7ajPqTxVFxVeeFUZz_eSpteXEvMgA';
+const supabaseUrl = '';
+const supabaseKey = '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const transformCoordinates = (coordinates: number[]) => {
@@ -109,7 +109,7 @@ function App() {
   useEffect(() => {
     if (!mapRef.current && geoData.features.length > 0) {
       // Initialize map only when geoData is available
-      mapboxgl.accessToken = 'pk.eyJ1IjoiYWx5eW91c3NlZiIsImEiOiJjbTNkaWJxNzMwM3poMm1xeTQ1cmFlZTVqIn0.vPHATw-9Rs7j3y-iW7oPJA';
+      mapboxgl.accessToken = '';
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         center: [31.499159810172785, 30.017576505538145],
